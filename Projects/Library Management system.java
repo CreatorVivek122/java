@@ -94,6 +94,23 @@ class Library{
         }
         System.out.println("Book Id Not Found");
     }
+    
+    public void searchBook(Scanner sc){
+        System.out.print("Enter a keyword to search (in title or author) : " );
+        String keyword = sc.nextLine().toLowerCase();
+        
+        boolean found = false;
+        
+        for(Book book : books){
+            if(book.title.toLowerCase().contains(keyword) || book.author.toLowerCase().contains(keyword)){
+                book.displayInfo();
+                found = true;
+            }
+        }
+        if(!found){
+            System.out.print("noo matching book found");
+        }
+    }
 }
 class Main {
     public static void main(String[] args) {
@@ -110,7 +127,8 @@ class Main {
             System.out.println("4. Return Book");
             System.out.println("5. Add Book");
             System.out.println("6. Add Member");
-            System.out.println("7. Exit");
+            System.out.println("7. Search Book by Title/Author");
+            System.out.println("8. Exit");
             System.out.print("Choose an option: ");
             int choice = sc.nextInt();
             sc.nextLine();
@@ -165,16 +183,17 @@ class Main {
                     l1.addMember(newMember);
                     break;
                 case 7:
+                    l1.searchBook(sc);
+                    break;
+                case 8:
                     System.out.println("Exiting Liabrary System. Goodby!");
                     sc.close();
                     return;
+
                 default:
                     System.out.println("Invalid choice. Please Try Again.");
             }
             
         }
-        
-        
-        
     }
 }
