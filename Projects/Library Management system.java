@@ -5,16 +5,22 @@ class Book{
     String title;
     String author;
     boolean isAvailable;
+    Member borrowedBy;
     
     public Book(int id, String title, String author, boolean isAvailable){
         this.id=id;
         this.title=title;
         this.author=author;
         this.isAvailable=isAvailable;
+        this.borrowedBy = null;
     }
     
     public void displayInfo(){
         System.out.println("Book Id : " + id + " Book Title : " + title + " Book Author : " + author + " Book's Availlablity : " + isAvailable);
+        if(!isAvailable && borrowedBy != null ){
+            System.out.print(" , Borrowed By : " + borrowedBy.name);
+        }
+        System.out.println();
     }
 }
 
@@ -65,35 +71,90 @@ class Library{
         }
     }
     
-    public void borrowBook(int bookId){
-        for (Book book : books ){
-            if(book.id == bookId){
-                if(book.isAvailable){
-                    book.isAvailable = false;
-                    System.out.println("Book Borrowed : " + book.title);
-                }else{
-                    System.out.println("Sorry! Book is already borrowed.");
-                }
-                return;
-            }
-        }
-        System.out.println("Book Id Not found.");
-    }
-    
-    public void returnBook(int bookId){
+    public void borrowBook(Scanner sc){
+        System.out.print("Enter Book Id to Borrow.");
+        int bookId = sc.nextInt();
+        sc.nextLine();
+        
+        System.out.print("Enter Id who is Borrowing : ");
+        int memberId = sc.nextInt();
+        sc.nextLine();
+        
+        Book targetBook = null;
+        Member targetMember = null;
+        
         for(Book book : books){
             if(book.id == bookId){
-                if(!book.isAvailable){
-                    book.isAvailable = true;
-                    System.out.println("Book Returned : " + book.title);
-                }else{
-                    System.out.println("Book was not borrowed");
-                }
-                return;
+                targetBook = book;
+                break;
             }
         }
-        System.out.println("Book Id Not Found");
+        
+        for(Member member : members){
+            if(member.memberId == memberId){
+                targetMember = member;
+                break;
+            }
+        }
+        
+        if(targetBook == null){
+            System.out.println("Book Id not found. ");
+            return;
+        }
+        
+        if(targetMember == null) {
+            System.out.println("Member Id not found.");
+            return;
+        }
+        
+        if(targetBook.isAvailable) {
+            targetBook.isAvailable = false;
+            targetBook.borrowedBy = targetMember;
+            System.out.println("Book borrowed by : " + targetMember.name);
+        }else{
+            System.out.println("Book is already borrowed by : " + targetBook.borrowedBy.name);
+        }
     }
+    
+    public void returnBook(Scanner sc){
+        System.out.print("Enter Book Id to Return : ");
+        int bookId = sc.nextInt();
+        sc.nextLine();
+        
+        System.out.print("Enter Member Id who is returning : ");
+        int memberId = sc.nextInt();
+        sc.nextLine();
+        
+        Book targetBook = null;
+        
+        for(Book book : books){
+            if(book.id == bookId){
+                targetBook = book;
+                break;
+            }
+        }
+        
+        if(targetBook == null) {
+            System.out.println("Book ID not found.");
+            return;
+        }
+        
+        if(targetBook.isAvailable || targetBook.borrowedBy == null) {
+            System.out.println("Book is not currently borrowed.");
+            return;
+        }
+        
+        if(targetBook.borrowedBy.memberId  != memberId){
+            System.out.print("This member did not borrow the book.");
+            return;
+        }
+        
+        targetBook.isAvailable = true;
+        System.out.println("Book return by " + targetBook.borrowedBy. name);
+        targetBook.borrowedBy = null;
+    }
+    
+    
     
     public void searchBook(Scanner sc){
         System.out.print("Enter a keyword to search (in title or author) : " );
@@ -141,14 +202,10 @@ class Main {
                     l1.showAllMembers();
                     break;
                 case 3:
-                    System.out.print("Enter Book Id To Borrow :");
-                    int borrowId = sc.nextInt();
-                    l1.borrowBook(borrowId);
+                    l1.borrowBook(sc);
                     break;
                 case 4:
-                    System.out.print("Enter Book Id to Return : ");
-                    int returnId = sc.nextInt();
-                    l1.returnBook(returnId);
+                    l1.returnBook(sc);
                     break;
                 case 5:
                     System.out.println("Enter Book Details ");
