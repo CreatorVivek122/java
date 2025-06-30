@@ -48,11 +48,23 @@ class Library{
     }
     
     public void addBook(Book book){
+        for(Book b : books){
+            if(b.id == book.id){
+                System.out.println("❌  Book ID already exists. Please use a unique ID. ");
+                return;
+            }
+        }
         books.add(book);
         System.out.println("Book added : " + book.title);
     }
     
     public void addMember(Member member){
+        for(Member m : members){
+            if(m.memberId == member.memberId){
+                System.out.println("❌  Member ID already exists. please use a unique ID.");
+                return;
+            }
+        }
         members.add(member);
         System.out.println("Member Added : " + member.name);
     }
