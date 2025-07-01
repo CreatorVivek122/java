@@ -39,6 +39,9 @@ class Member{
 }
 
 class Library{
+    int bookIdCounter = 100;
+    int memberIdCounter = 1;
+    
     ArrayList<Book> books;
     ArrayList<Member> members;
     
@@ -47,26 +50,17 @@ class Library{
         members = new ArrayList<> ();
     }
     
-    public void addBook(Book book){
-        for(Book b : books){
-            if(b.id == book.id){
-                System.out.println("❌  Book ID already exists. Please use a unique ID. ");
-                return;
-            }
-        }
+    public void addBook(String title, String author, boolean isAvailable){
+        Book book =new Book(bookIdCounter++, title, author, isAvailable);
         books.add(book);
-        System.out.println("Book added : " + book.title);
+        System.out.println("Book added : " + title + "(ID: " + book.id + ")");
     }
     
-    public void addMember(Member member){
-        for(Member m : members){
-            if(m.memberId == member.memberId){
-                System.out.println("❌  Member ID already exists. please use a unique ID.");
-                return;
-            }
-        }
+    
+    public void addMember(String name){
+        Member member = new Member(memberIdCounter++, name);
         members.add(member);
-        System.out.println("Member Added : " + member.name);
+        System.out.println("Member Added : " + name + " (Id: " + member.memberId + ")");
     }
     
     public void showAllBooks(){
@@ -165,9 +159,6 @@ class Library{
         System.out.println("Book return by " + targetBook.borrowedBy. name);
         targetBook.borrowedBy = null;
     }
-    
-    
-    
     public void searchBook(Scanner sc){
         System.out.print("Enter a keyword to search (in title or author) : " );
         String keyword = sc.nextLine().toLowerCase();
@@ -222,34 +213,26 @@ class Main {
                 case 5:
                     System.out.println("Enter Book Details ");
         
-                    System.out.print("Book Id : ");
-                    int id = sc.nextInt();
-                    sc.nextLine();
-        
                     System.out.print("Book Title : ");
                     String title = sc.nextLine();
-        
+    
                     System.out.print("Book Author : ");
                     String author = sc.nextLine();
-        
-                    System.out.print("Availablity of book (true/false) : ");
+    
+                    System.out.print("Availablity (true/false) : ");
                     boolean isAvailable = sc.nextBoolean();
                     sc.nextLine();
                     
-                    Book newBook = new Book(id, title, author, isAvailable);
-                    l1.addBook(newBook);
+                    l1.addBook(title, author, isAvailable);
                     break;
+                    
                 case 6:
                     System.out.println("Enter Member Details ");
         
-                    System.out.print("Enter Member Id : ");
-                    int memberId = sc.nextInt();
-                    sc.nextLine();
-        
                     System.out.print("Enter Member Name : ");
                     String name = sc.nextLine();
-                    Member newMember = new Member(memberId, name);
-                    l1.addMember(newMember);
+                    
+                    l1.addMember(name);
                     break;
                 case 7:
                     l1.searchBook(sc);
