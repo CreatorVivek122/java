@@ -5,20 +5,31 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 import com.example.library_manager.model.Book;
+import com.example.library_manager.repository.BookRepository;
 
 @Service
 public class LibraryService {
-	private final List<Book> books = new ArrayList<>();
+//	private final List<Book> books = new ArrayList<>();
+	private final BookRepository  repository;
+	
+	public LibraryService(BookRepository repository) {
+		this.repository = repository;
+	}
 	
 	public List<Book> getAllBooks() {
-		return books;
+		return repository.findAll();
 	}
 	
 	public void addBook(Book book) {
-		books.add(book);
+		repository.save(book);
 	}
 	
 	public boolean removeBook(String title) {
-		return books.removeIf(b -> b.getTitle().equalsIgnoreCase(title));
+		try {
+			repository.deleteByTitle(title);
+			return true;
+		} catch (Exception e){
+			return false;
+		}
 	}
 }

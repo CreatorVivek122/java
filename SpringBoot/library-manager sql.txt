@@ -1,0 +1,4 @@
+CREATE DATABASE librarydb;
+CREATE USER 'libraryuser'@'localhost' IDENTIFIED BY 'password';
+GRANT ALL PRIVILEGES ON librarydb.* TO 'libraryuser'@'localhost';
+FLUSH PRIVILEGES;
